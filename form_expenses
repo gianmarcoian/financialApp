@@ -1,0 +1,51 @@
+import React, { useState } from 'react';
+
+function ExpenseForm() {
+  const [date, setDate] = useState('');
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Send a POST request to the backend with the expense data
+    const expenseData = { date, amount, category, description };
+
+    // Define the URL for your backend
+    const backendURL = 'http://localhost:8889/api/addExpense';
+
+    try {
+      const response = await fetch(backendURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(expenseData),
+      });
+
+      if (response.ok) {
+        // Request was successful
+        console.log('Expense added successfully');
+        // You can perform further actions if needed
+      } else {
+        // Handle errors
+        console.error('Error adding expense');
+      }
+    } catch (error) {
+      console.error('An error occurred while sending the request:', error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" placeholder="Date" value={date} onChange={(e) => setDate(e.target.value)} />
+      <input type="text" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+      <input type="text" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+      <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+      <button type="submit">Add</button>
+    </form>
+  );
+}
+
+export default ExpenseForm;
+
